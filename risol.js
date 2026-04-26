@@ -3,7 +3,7 @@
 const varian = [
   { img: "img/mayo.jpeg", nama: "Risol Mayo", deskription: "Mayo | Telur | Sosis", rasa: "gurih", harga: 3000 },
   { img: "img/mentai.jpeg", nama: "Risol Mentai", deskription: "Mentai | Telur | Sosis", rasa: "umami", harga: 3000 },
-  { img: "img/Ayam.jpeg", nama: "Risol Ayam", deskription: "Ayam | Bumbu Pedas", rasa: "pedas", harga: 3000 },
+  { img: "img/ayam.jpeg", nama: "Risol Ayam", deskription: "Ayam | Bumbu Pedas", rasa: "pedas", harga: 3000 },
   { img: "img/coklat.jpeg", nama: "Risol Coklat", deskription: "Coklat | Pisang", rasa: "manis", harga: 3000 },
   { img: "img/matcha.jpg", nama: "Risol Matcha", deskription: "Matcha | Keju", rasa: "manis", harga: 3000 },
 ];
