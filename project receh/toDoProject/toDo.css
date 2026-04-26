@@ -1,0 +1,113 @@
+.completed {
+    text-decoration: line-through;
+    color: gray;
+  }
+  /* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Body */
+body {
+  background: #0f172a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+/* Judul */
+h1 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+/* Input area */
+#todo-input {
+  padding: 10px;
+  width: 250px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+}
+
+#add-btn {
+  padding: 10px 15px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #22c55e;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+#add-btn:hover {
+  background: #16a34a;
+}
+
+/* List */
+#todo-list {
+  margin-top: 30px;
+  width: 320px;
+}
+
+/* Item */
+#todo-list li {
+  background: #1e293b;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Text */
+#todo-list span {
+  flex: 1;
+}
+
+/* Completed */
+.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* Buttons */
+button.btn-ceklis {
+  background: #3b82f6;
+  border: none;
+  margin-left: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button.btn-ceklis:hover {
+  background: #2563eb;
+}
+
+button.btn-hapus {
+  background: #ef4444;
+  border: none;
+  margin-left: 5px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button.btn-hapus:hover {
+  background: #dc2626;
+}

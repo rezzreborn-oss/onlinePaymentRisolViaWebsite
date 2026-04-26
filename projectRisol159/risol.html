@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Risol 159</title>
+    <link rel="stylesheet" href="risol.css" />
+  </head>
+  <body>
+    <header>
+      <h2 class="head-brand">Risol Maydas 159</h2>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">Varian</a></li>
+          <li><a href="/services">Harga</a></li>
+          <li><a href="/contact">Pesan</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <!--section 1: hero-->
+      <section class="hero">
+        <img class="hero-img" src="img/risol2.jpeg" />
+        <div class="hero-container">
+          <h1 class="brand">Risol Pemuda 159</h1>
+          <p class="slogan">Simple, Murah dan Enak.</p>
+          <button class="btn-hero">Lihat Menu</button>
+        </div>
+      </section>
+      <!--section 2: menu-->
+      <section class="menu">
+        <h2 class="text-menu">Rasa Menu Kami</h2>
+        <div class="filter-btn">
+          <button class="varian-btn" data-filter="manis">Manis</button>
+          <button class="varian-btn" data-filter="gurih">Gurih</button>
+          <button class="varian-btn" data-filter="semua">Semua</button>
+          <button class="varian-btn" data-filter="umami">Umami</button>
+          <button class="varian-btn" data-filter="pedas">Pedas</button>
+        </div>
+        <div id="menu-container"></div>
+        <div id="total-box" class="total-box">
+          Total: Rp0
+        </div>
+      </section>
+
+      <section>
+        <div class="form-order">
+          <input type="text" id="nama" placeholder="Atas Nama" />
+          <input type="text" id="kelas" placeholder="Kelas" />
+        </div>
+        <div class="call-to-action">
+          <div class="call-to-action">
+            <button class="btn-wa" onclick="pesanWA()">Pesan Sekarang</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>terima kasih sudah berkunjung! salam dari Reza 11 TKJ 3</p>
+    </footer>
+    <script src="risol.js"></script>
+  </body>
+</html>
