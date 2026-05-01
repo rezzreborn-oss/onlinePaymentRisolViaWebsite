@@ -1,65 +1,899 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Risol 159</title>
-    <link rel="stylesheet" href="risol.css" />
-  </head>
-  <body>
-    <header>
-      <h2 class="head-brand">Risol Maydas 159</h2>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/about">Varian</a></li>
-          <li><a href="/services">Harga</a></li>
-          <li><a href="/contact">Pesan</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <!--section 1: hero-->
-      <section class="hero">
-        <img class="hero-img" src="img/risol2.jpeg" />
-        <div class="hero-container">
-          <h1 class="brand">Risol Pemuda 159</h1>
-          <p class="slogan">Simple, Murah dan Enak.</p>
-          <button class="btn-hero">Lihat Menu</button>
-        </div>
-      </section>
-      <!--section 2: menu-->
-      <section class="menu">
-        <h2 class="text-menu">Rasa Menu Kami</h2>
-        <div class="filter-btn">
-          <button class="varian-btn" data-filter="manis">Manis</button>
-          <button class="varian-btn" data-filter="gurih">Gurih</button>
-          <button class="varian-btn" data-filter="semua">Semua</button>
-          <button class="varian-btn" data-filter="umami">Umami</button>
-          <button class="varian-btn" data-filter="pedas">Pedas</button>
-        </div>
-        <div id="menu-container"></div>
-        <div id="total-box" class="total-box">
-          Total: Rp0
-        </div>
-      </section>
+    <title>Risol Pemuda 159</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      h1,
+      h2,
+      .brand-font {
+        font-family: "Sora", sans-serif;
+      }
 
-      <section>
-        <div class="form-order">
-          <input type="text" id="nama" placeholder="Atas Nama" />
-          <input type="text" id="kelas" placeholder="Kelas" />
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Hero parallax bg */
+
+      .hero-bg {
+        background: linear-gradient(
+          135deg,
+          #7f1d1d 0%,
+          #991b1b 40%,
+          #dc2626 100%
+        );
+      }
+
+      /* Card hover lift */
+      .menu-card {
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .menu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 5rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+        background: #1c1917;
+        color: #fef3c7;
+        padding: 0.6rem 1.4rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 999;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* Active filter button */
+      .filter-btn.active {
+        background: #dc2626;
+        color: white;
+        border-color: #dc2626;
+      }
+
+      /* Delivery option card */
+      .delivery-opt input:checked + label {
+        border-color: #dc2626;
+        background: #fffbeb;
+        color: #92400e;
+      }
+
+      /* Sticky bottom bar */
+      .sticky-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.92);
+        border-top: 1px solid #fde68a;
+        padding: 0.75rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Animate in on load */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.6s ease forwards;
+      }
+      .fade-up-2 {
+        animation: fadeUp 0.6s 0.15s ease forwards;
+        opacity: 0;
+      }
+      .fade-up-3 {
+        animation: fadeUp 0.6s 0.3s ease forwards;
+        opacity: 0;
+      }
+
+      /* Grain texture overlay */
+      .hero-section::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        opacity: 0.4;
+      }
+
+      input[type="text"],
+      input[type="tel"] {
+        outline: none;
+      }
+      input[type="text"]:focus,
+      input[type="tel"]:focus {
+        border-color: #d97706;
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+      }
+
+      .qty-btn:active {
+        transform: scale(0.92);
+      }
+
+      /* Nav links */
+      .nav-link {
+        position: relative;
+        padding-bottom: 2px;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #fbbf24;
+        transition: width 0.2s;
+        border-radius: 2px;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Badge rasa */
+      .badge-manis {
+        background: #fce7f3;
+        color: #9d174d;
+      }
+      .badge-gurih {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-umami {
+        background: #ede9fe;
+        color: #5b21b6;
+      }
+      .badge-pedas {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .badge-semua {
+        background: #f0fdf4;
+        color: #14532d;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #dc2626;
+        border-radius: 99px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-red-50 text-stone-800 pb-24">
+    <!-- ===== NAV ===== -->
+    <nav
+      class="fixed top-0 inset-x-0 z-40 bg-white/80 backdrop-blur-md border-b border-red-100 shadow-sm"
+    >
+      <div
+        class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-sm brand-font"
+          >
+            R
+          </div>
+          <span
+            class="font-bold text-stone-800 brand-font text-base leading-tight"
+            >Risol 159</span
+          >
         </div>
-        <div class="call-to-action">
-          <div class="call-to-action">
-            <button class="btn-wa" onclick="pesanWA()">Pesan Sekarang</button>
+        <div
+          class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-600"
+        >
+          <a
+            href="#menu"
+            class="nav-link hover:text-red-600 transition-colors"
+            >Menu</a
+          >
+          <a
+            href="#order"
+            class="nav-link hover:text-red-600 transition-colors"
+            >Order</a
+          >
+          <a
+            href="#order"
+            class="bg-red-700 hover:bg-red-800 text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-colors"
+            >Pesan Sekarang</a
+          >
+        </div>
+        <!-- Mobile menu icon -->
+        <a
+          href="#order"
+          class="md:hidden bg-red-500 text-white text-xs px-3 py-1.5 rounded-full font-semibold"
+          >Pesan</a
+        >
+      </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero-section relative overflow-hidden pt-16">
+      <div
+        class="hero-bg min-h-[88vh] md:min-h-screen flex items-center relative"
+      >
+        <!-- Decorative circles -->
+        <div
+          class="absolute -top-20 -right-20 w-72 h-72 bg-red-400/20 rounded-full blur-3xl pointer-events-none"
+        ></div>
+        <div
+          class="absolute bottom-0 -left-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none"
+        ></div>
+
+        <!-- Hero image (right side on desktop) -->
+        <div
+          class="absolute right-0 top-0 bottom-0 w-1/2 hidden md:block overflow-hidden"
+        >
+          <img
+            src="img/risol2.jpeg"
+            alt="Risol Pemuda 159"
+            class="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-amber-700 via-amber-700/60 to-transparent"
+          ></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 py-20 md:py-0">
+          <!-- Badge -->
+          <div
+            class="fade-up inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-amber-100 text-sm font-medium mb-5 border border-white/20"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-green-400 animate-pulse inline-block"
+            ></span>
+            Buka Sekarang · Pesan Mudah via WhatsApp
+          </div>
+
+          <h1
+            class="fade-up-2 text-5xl md:text-7xl font-extrabold text-white leading-tight brand-font mb-4"
+          >
+            Risol<br />
+            <span class="text-red-300">Pemuda</span> 159
+          </h1>
+          <p
+            class="fade-up-3 text-amber-100/90 text-lg md:text-xl max-w-md mb-8 leading-relaxed"
+          >
+            Camilan sekolah favorit — simpel, murah, dan bikin nagih. 4 varian
+            rasa spesial.
+          </p>
+
+          <div class="fade-up-3 flex flex-wrap gap-3">
+            <a
+              href="#menu"
+              class="bg-white text-red-700 hover:bg-red-50 font-bold px-6 py-3 rounded-full transition-all hover:scale-105 shadow-lg shadow-amber-900/20 text-sm"
+            >
+              Lihat Menu →
+            </a>
+            <a
+              href="#order"
+              class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-full transition-all hover:scale-105 text-sm"
+            >
+              Pesan Sekarang
+            </a>
+          </div>
+
+          <!-- Quick stats -->
+          <div class="fade-up-3 flex gap-6 mt-12">
+            <div>
+              <p class="text-white font-bold text-2xl brand-font">4+</p>
+              <p class="text-amber-200 text-xs mt-0.5">Varian Rasa</p>
+            </div>
+            <div class="w-px bg-white/20"></div>
+            <div>
+              <p class="text-white font-bold text-2xl brand-font">Rp3K</p>
+              <p class="text-amber-200 text-xs mt-0.5">Per Buah</p>
+            </div>
+            <div class="w-px bg-white/20"></div>
+            <div>
+              <p class="text-white font-bold text-2xl brand-font">⚡</p>
+              <p class="text-amber-200 text-xs mt-0.5">Order via WA</p>
+            </div>
           </div>
         </div>
-      </section>
-    </main>
-    <footer>
-      <p>terima kasih sudah berkunjung! salam dari Reza 11 TKJ 3</p>
+      </div>
+
+      <!-- Wave separator -->
+      <div class="absolute bottom-0 inset-x-0">
+        <svg
+          viewBox="0 0 1440 60"
+          xmlns="http://www.w3.org/2000/svg"
+          class="fill-amber-50 w-full block"
+        >
+          <path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===== MENU SECTION ===== -->
+    <section id="menu" class="max-w-5xl mx-auto px-4 py-16">
+      <div class="text-center mb-10">
+        <p
+          class="text-red-600 font-semibold text-sm uppercase tracking-widest mb-2"
+        >
+          Pilih Yang Kamu Suka
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-extrabold brand-font text-stone-800"
+        >
+          Menu Kami 🍽️
+        </h2>
+        <p class="text-stone-500 mt-2 text-sm">
+          Semua seharga Rp3.000 — murah meriah!
+        </p>
+      </div>
+
+      <!-- Filter buttons -->
+      <div
+        class="flex flex-wrap justify-center gap-2 mb-8"
+        id="filter-container"
+      >
+        <button
+          class="filter-btn active px-4 py-1.5 rounded-full text-sm font-semibold border border-stone-300 bg-white text-stone-600 transition-all"
+          data-filter="semua"
+        >
+          Semua
+        </button>
+        <button
+          class="filter-btn px-4 py-1.5 rounded-full text-sm font-semibold border border-stone-300 bg-white text-stone-600 transition-all"
+          data-filter="gurih"
+        >
+          🧀 Gurih
+        </button>
+        <button
+          class="filter-btn px-4 py-1.5 rounded-full text-sm font-semibold border border-stone-300 bg-white text-stone-600 transition-all"
+          data-filter="umami"
+        >
+          🌊 Umami
+        </button>
+        <button
+          class="filter-btn px-4 py-1.5 rounded-full text-sm font-semibold border border-stone-300 bg-white text-stone-600 transition-all"
+          data-filter="pedas"
+        >
+          🌶️ Pedas
+        </button>
+        <button
+          class="filter-btn px-4 py-1.5 rounded-full text-sm font-semibold border border-stone-300 bg-white text-stone-600 transition-all"
+          data-filter="manis"
+        >
+          🍫 Manis
+        </button>
+      </div>
+
+      <!-- Menu grid -->
+      <div
+        id="menu-container"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      ></div>
+    </section>
+
+    <!-- ===== ORDER SECTION ===== -->
+    <section id="order" class="max-w-2xl mx-auto px-4 pb-12">
+      <div
+        class="bg-white rounded-3xl shadow-xl border border-red-100 overflow-hidden"
+      >
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-red-700 to-red-800 px-6 py-5">
+          <h2 class="text-white font-bold text-xl brand-font">
+            Detail Pesanan 🛒
+          </h2>
+          <p class="text-amber-100 text-sm mt-0.5">
+            Isi data kamu untuk pesan via WhatsApp
+          </p>
+        </div>
+
+        <div class="p-6 space-y-5">
+          <!-- Nama & Kelas -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1.5 block"
+                >Nama</label
+              >
+              <input
+                type="text"
+                id="nama"
+                placeholder="Nama kamu..."
+                class="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-stone-50 transition-all"
+              />
+            </div>
+            <div>
+              <label
+                class="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1.5 block"
+                >Kelas</label
+              >
+              <input
+                type="text"
+                id="kelas"
+                placeholder="Mis: 11 TKJ 3"
+                class="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm bg-stone-50 transition-all"
+              />
+            </div>
+          </div>
+
+          <!-- Waktu Pengiriman -->
+          <div>
+            <label
+              class="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3 block"
+              >⏰ Kapan Dikirim?</label
+            >
+            <div class="grid grid-cols-2 gap-2.5" id="delivery-options">
+              <div class="delivery-opt">
+                <input
+                  type="radio"
+                  name="waktu"
+                  id="d-sekarang"
+                  value="Sekarang (segera)"
+                  class="sr-only"
+                />
+                <label
+                  for="d-sekarang"
+                  class="flex items-center gap-3 cursor-pointer border border-stone-200 rounded-xl p-3 transition-all bg-stone-50 hover:border-amber-300"
+                >
+                  <span class="text-xl">⚡</span>
+                  <div>
+                    <p class="text-sm font-semibold text-stone-700">Sekarang</p>
+                    <p class="text-xs text-stone-400">Langsung diantar</p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="delivery-opt">
+                <input
+                  type="radio"
+                  name="waktu"
+                  id="d-istirahat"
+                  value="Waktu Istirahat"
+                  class="sr-only"
+                  checked
+                />
+                <label
+                  for="d-istirahat"
+                  class="flex items-center gap-3 cursor-pointer border border-amber-400 rounded-xl p-3 transition-all bg-red-50 hover:border-amber-400 text-amber-800"
+                >
+                  <span class="text-xl">☕</span>
+                  <div>
+                    <p class="text-sm font-semibold">Istirahat</p>
+                    <p class="text-xs text-red-600/70">Pas jam istirahat</p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="delivery-opt">
+                <input
+                  type="radio"
+                  name="waktu"
+                  id="d-shalat"
+                  value="Setelah Shalat Dzuhur"
+                  class="sr-only"
+                />
+                <label
+                  for="d-shalat"
+                  class="flex items-center gap-3 cursor-pointer border border-stone-200 rounded-xl p-3 transition-all bg-stone-50 hover:border-amber-300"
+                >
+                  <span class="text-xl">🕌</span>
+                  <div>
+                    <p class="text-sm font-semibold text-stone-700">
+                      Setelah Shalat
+                    </p>
+                    <p class="text-xs text-stone-400">Ba'da Dzuhur</p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="delivery-opt">
+                <input
+                  type="radio"
+                  name="waktu"
+                  id="d-rumah"
+                  value="Diantar ke Rumah (COD)"
+                  class="sr-only"
+                />
+                <label
+                  for="d-rumah"
+                  class="flex items-center gap-3 cursor-pointer border border-stone-200 rounded-xl p-3 transition-all bg-stone-50 hover:border-amber-300"
+                >
+                  <span class="text-xl">🏠</span>
+                  <div>
+                    <p class="text-sm font-semibold text-stone-700">Ke Rumah</p>
+                    <p class="text-xs text-stone-400">COD · diskusi dulu</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order summary -->
+          <div class="bg-red-50 rounded-2xl p-4 border border-red-100">
+            <p
+              class="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2"
+            >
+              Ringkasan Pesanan
+            </p>
+            <div
+              id="order-summary"
+              class="text-sm text-stone-600 space-y-1 min-h-[40px]"
+            >
+              <p class="text-stone-400 text-xs italic">
+                Belum ada item dipilih...
+              </p>
+            </div>
+            <div
+              class="border-t border-amber-200 mt-3 pt-3 flex justify-between items-center"
+            >
+              <span class="text-sm font-semibold text-stone-700">Total</span>
+              <span
+                id="total-box"
+                class="font-extrabold text-red-700 brand-font text-lg"
+                >Rp0</span
+              >
+            </div>
+          </div>
+
+          <!-- CTA Button -->
+          <button
+            onclick="pesanWA()"
+            class="w-full bg-green-500 hover:bg-green-600 active:scale-95 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 text-base shadow-lg shadow-green-500/30 transition-all"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              />
+            </svg>
+            Pesan via WhatsApp
+          </button>
+
+          <p class="text-center text-xs text-stone-400">
+            Kamu akan diarahkan ke WhatsApp kami 🙏
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer
+      class="text-center py-8 text-sm text-stone-400 border-t border-red-100 bg-white"
+    >
+      <p class="font-medium text-stone-500">Risol Pemuda 159</p>
+      <p class="mt-1">
+        Made with ❤️ oleh
+        <span class="text-red-600 font-semibold">Reza · 11 TKJ 3</span>
+      </p>
     </footer>
-    <script src="risol.js"></script>
+
+    <!-- ===== STICKY BOTTOM BAR (mobile) ===== -->
+    <div class="sticky-bar md:hidden">
+      <div>
+        <p class="text-xs text-stone-500">Total pesanan</p>
+        <p
+          id="total-sticky"
+          class="font-extrabold text-red-700 brand-font text-lg leading-tight"
+        >
+          Rp0
+        </p>
+      </div>
+      <a
+        href="#order"
+        class="bg-green-500 text-white font-bold px-5 py-2.5 rounded-full text-sm shadow-lg shadow-green-500/30"
+      >
+        Pesan →
+      </a>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast-el" class="toast"></div>
+
+    <script>
+      // ===== DATA =====
+      const varian = [
+        {
+          img: "img/mayo.jpeg",
+          nama: "Risol Mayo",
+          deskription: "Mayo · Telur · Sosis",
+          rasa: "gurih",
+          harga: 3000,
+        },
+        {
+          img: "img/mentai.jpeg",
+          nama: "Risol Mentai",
+          deskription: "Mentai · Telur · Sosis",
+          rasa: "umami",
+          harga: 3000,
+        },
+        {
+          img: "img/ayam.jpeg",
+          nama: "Risol Ayam",
+          deskription: "Ayam · Bumbu Pedas",
+          rasa: "pedas",
+          harga: 3000,
+        },
+        {
+          img: "img/coklat.jpeg",
+          nama: "Risol Coklat",
+          deskription: "Coklat · Pisang",
+          rasa: "manis",
+          harga: 3000,
+        },
+      ];
+
+      const BADGE = {
+        gurih: "badge-gurih",
+        umami: "badge-umami",
+        pedas: "badge-pedas",
+        manis: "badge-manis",
+      };
+      const EMOJI = { gurih: "🧀", umami: "🌊", pedas: "🌶️", manis: "🍫" };
+
+      // ===== STATE =====
+      let currentFilter = "semua";
+      const keranjang =
+        JSON.parse(localStorage.getItem("keranjang")) ||
+        varian.reduce((acc, item) => {
+          acc[item.nama] = 0;
+          return acc;
+        }, {});
+
+      function saveKeranjang() {
+        localStorage.setItem("keranjang", JSON.stringify(keranjang));
+      }
+
+      function hitungTotal() {
+        return Object.entries(keranjang).reduce((total, [nama, jumlah]) => {
+          const item = varian.find((v) => v.nama === nama);
+          return total + (item ? item.harga * jumlah : 0);
+        }, 0);
+      }
+
+      // ===== TOAST =====
+      function showToast(text) {
+        const el = document.getElementById("toast-el");
+        el.textContent = text;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 2200);
+      }
+
+      // ===== UPDATE SUMMARY =====
+      function updateSummary() {
+        const box = document.getElementById("order-summary");
+        const total = hitungTotal();
+
+        document.getElementById("total-box").textContent =
+          "Rp" + total.toLocaleString("id-ID");
+        document.getElementById("total-sticky").textContent =
+          "Rp" + total.toLocaleString("id-ID");
+
+        // Ambil hanya item yang jumlahnya lebih dari 0
+        const itemDipesan = varian.filter(function (v) {
+          return keranjang[v.nama] > 0;
+        });
+
+        if (itemDipesan.length === 0) {
+          box.innerHTML =
+            '<p class="text-stone-400 text-xs italic">Belum ada item dipilih...</p>';
+          return;
+        }
+
+        box.innerHTML = itemDipesan
+          .map(function (item) {
+            const jumlah = keranjang[item.nama];
+            return (
+              '<div class="flex justify-between">' +
+              "<span>" +
+              item.nama +
+              ' <span class="text-red-600 font-semibold">×' +
+              jumlah +
+              "</span></span>" +
+              '<span class="font-medium">Rp' +
+              (item.harga * jumlah).toLocaleString("id-ID") +
+              "</span>" +
+              "</div>"
+            );
+          })
+          .join("");
+      }
+
+      // ===== RENDER =====
+      function render(data) {
+        document.getElementById("menu-container").innerHTML = data
+          .map((item) => {
+            const qty = keranjang[item.nama];
+            return `
+            <div class="menu-card bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden flex flex-col">
+              <div class="relative h-44 overflow-hidden bg-red-100">
+                <img src="${item.img}" alt="${item.nama}"
+                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  onerror="this.style.display='none'" />
+                <div class="absolute top-2 left-2">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${BADGE[item.rasa] || "bg-stone-100 text-stone-600"}">
+                    ${EMOJI[item.rasa] || ""} ${item.rasa.charAt(0).toUpperCase() + item.rasa.slice(1)}
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-4 flex flex-col flex-1">
+                <h3 class="font-bold text-stone-800 text-base brand-font">${item.nama}</h3>
+                <p class="text-stone-400 text-xs mt-0.5 flex-1">${item.deskription}</p>
+                <p class="text-red-600 font-extrabold text-lg brand-font mt-2">Rp${item.harga.toLocaleString("id-ID")}</p>
+
+                <div class="flex items-center justify-between mt-3 bg-stone-50 rounded-xl p-1">
+                  <button class="qty-btn w-8 h-8 rounded-lg bg-white shadow-sm border border-stone-200 text-stone-700 font-bold text-lg flex items-center justify-center transition-all hover:bg-red-50 hover:border-amber-300"
+                    onclick="ubahJumlah('${item.nama}', -1)">−</button>
+                  <span class="font-bold text-stone-800 text-base w-6 text-center" id="${namaToId(item.nama)}">${qty}</span>
+                  <button class="qty-btn w-8 h-8 rounded-lg bg-red-500 text-white font-bold text-lg flex items-center justify-center transition-all hover:bg-red-600 shadow-sm shadow-amber-300"
+                    onclick="ubahJumlah('${item.nama}', 1)">+</button>
+                </div>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        updateSummary();
+      }
+
+      // ===== FILTER =====
+      function filterMenu(kategori) {
+        currentFilter = kategori;
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelector(`[data-filter="${kategori}"]`)
+          .classList.add("active");
+        const hasil =
+          kategori === "semua"
+            ? varian
+            : varian.filter((i) => i.rasa === kategori);
+        render(hasil);
+      }
+
+      document
+        .getElementById("filter-container")
+        .addEventListener("click", (e) => {
+          if (e.target.closest(".filter-btn")) {
+            filterMenu(e.target.closest(".filter-btn").dataset.filter);
+          }
+        });
+
+      // ===== UPDATE QTY =====
+      function namaToId(nama) {
+        return "qty-" + nama.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "");
+      }
+
+      function ubahJumlah(nama, angka) {
+        keranjang[nama] = Math.max(0, (keranjang[nama] || 0) + angka);
+        saveKeranjang();
+
+        const el = document.getElementById(namaToId(nama));
+        if (el) el.textContent = keranjang[nama];
+
+        updateSummary();
+        showToast(
+          angka > 0
+            ? "✅ Ditambah ke keranjang!"
+            : "🗑️ Dikurangi dari keranjang",
+        );
+      }
+
+      // ===== DELIVERY TIME =====
+      function getWaktuPengiriman() {
+        const selected = document.querySelector('input[name="waktu"]:checked');
+        return selected ? selected.value : "Waktu Istirahat";
+      }
+
+      // Delivery option click handler
+      document.querySelectorAll(".delivery-opt label").forEach((label) => {
+        label.addEventListener("click", () => {
+          document.querySelectorAll(".delivery-opt label").forEach((l) => {
+            l.classList.remove(
+              "border-amber-400",
+              "bg-red-50",
+              "text-amber-800",
+            );
+            l.classList.add("border-stone-200", "bg-stone-50");
+            l.querySelector("p.text-sm").classList.remove("font-semibold");
+          });
+          label.classList.add(
+            "border-amber-400",
+            "bg-red-50",
+            "text-amber-800",
+          );
+          label.classList.remove("border-stone-200", "bg-stone-50");
+        });
+      });
+
+      // ===== WHATSAPP =====
+      function pesanWA() {
+        const nama = document.getElementById("nama").value.trim();
+        const kelas = document.getElementById("kelas").value.trim();
+
+        if (!nama || !kelas) {
+          showToast("⚠️ Isi nama & kelas dulu!");
+          return;
+        }
+
+        const itemDipesan = varian.filter(function (v) {
+          return keranjang[v.nama] > 0;
+        });
+        if (itemDipesan.length === 0) {
+          showToast("🛒 Keranjang masih kosong!");
+          return;
+        }
+
+        const waktu = getWaktuPengiriman();
+        let pesan = "*ORDER RISOL PEMUDA 159* \uD83C\uDF7D\uFE0F\n\n";
+        pesan += "Nama  : " + nama + "\n";
+        pesan += "Kelas : " + kelas + "\n";
+        pesan += "Waktu : " + waktu + "\n\n";
+        pesan += "*Pesanan:*\n";
+
+        itemDipesan.forEach(function (item) {
+          var jumlah = keranjang[item.nama];
+          pesan +=
+            "\u2022 " +
+            item.nama +
+            " x" +
+            jumlah +
+            " = Rp" +
+            (item.harga * jumlah).toLocaleString("id-ID") +
+            "\n";
+        });
+
+        pesan += "\nTotal: *Rp" + hitungTotal().toLocaleString("id-ID") + "*";
+        pesan += "\n\nTerima kasih!";
+
+        // Gunakan location.href agar tidak diblokir browser sebagai popup
+        window.location.href =
+          "https://wa.me/6287811165612?text=" + encodeURIComponent(pesan);
+
+        document.getElementById("nama").value = "";
+        document.getElementById("kelas").value = "";
+      }
+
+      // ===== INIT =====
+      render(varian);
+    </script>
   </body>
 </html>
